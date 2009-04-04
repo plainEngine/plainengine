@@ -1,4 +1,4 @@
-#общая документация по Lua API для MPLuaSubject
+#summary документация по Lua API для MPLuaSubject#labels Phase-Implementation,Featured
 
 =Привязки Lua к plainEngine= 
 _(Предоставляют полное API plainEngine для Lua)_
