@@ -1,4 +1,4 @@
-#summary Lua API documentation for MPLuaSubject
+﻿#summary Lua API documentation for MPLuaSubject
 #labels Phase-Implementation,Featured
 
 =Lua bindings for plainEngine= 
@@ -8,7 +8,7 @@ _(Provides full plainEngine api to lua)_
 
 ==Basic==
 Script is searched for _'init', 'start', 'update'_ and _'stop'_ functions.
-		* `init` - function is called on Lua subject starting and should contain subject initialization function
+		* `init` - function is called on Lua subject starting and should contain subject initialization code
 			(object creation, delegate registration, etc.) and should not contain any another-subject-dependant actions
 			(e.g. delegate calls) because necessary subjects might have been not initialized yet.
 		* `start`- function is called on Lua subject first update and should contain another-subject-dependant actions as this subjects
@@ -43,7 +43,7 @@ To create plainEngine object, you should use functions `MPNewObject(name)` and `
 
 Also you may use functions `MPGetAllObjects()` (returns array with all objects) and `MPGetObjectsByFeature(featurename)` (returns array with all objects with given feature)
 
-To get object methods, you should use `object:methodname` (or `object["methodName"]` (object, ...) ). The result would be function, analogical to corresponding method. If methodName contains ':' symbols, you can't use object:methodName syntax, but you can use _MPMethodAliasTable_. It is global table, which maps method aliases to their real names. When method is called, it is firstly checked if there is alias for it. If there is, method mapped to this alias in MPMethodAliasTable is called. For example, you want expression `obj["setXYZ:::"](0, 0, 0)` to become less ugly.
+To get object methods, you should use `object:methodname` (or `object["methodName"]` (object, ...) ). The result would be function, analogical to corresponding method. If methodName contains ':' symbols, you can't use object:methodName syntax, but you can use _MPMethodAliasTable_. It is global table, which maps method aliases to their real names. When method is called, it is firstly checked if there is alias for it. If there is, method mapped to this alias in MPMethodAliasTable is called. For example, you want expression `obj["setXYZ:::"](obj, 0, 0, 0)` to become less ugly.
 So, in 'start' you declare:
 {{{
 function start()
@@ -98,7 +98,7 @@ delegateClass =
 function delegateClass:new()
 	return setmetatable(
 	{
-		--specific to all instances
+		--specific to every instance
 		v=0
 	}, {__index = delegateClass} )
 end

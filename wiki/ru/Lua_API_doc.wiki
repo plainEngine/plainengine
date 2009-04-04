@@ -14,33 +14,33 @@ _(Предоставляют полное API plainEngine для Lua)_
 
 Эти функции не должны содержать ни одного аргумента.
 
-==Logging==
-To send message to log, you should use function `MPLog(level, msg)`
-First argument is log level (you should use level constants _(info, notice, warning, etc.)_). Second argument is string which would be sent to log. Also you may use `MPLog(msg)`, it is equal to `MPLog(notice, msg)`.
+==Работа с логом==
+Чтобы отправить сообщение в лог, следуеет использовать функцию `MPLog(level, msg)`
+Первый аргумент - это уровень лога (следует испольщовать константы уровня _(info, notice, warning, и т.д.)_). Второй аргумент - это строка, которая должна быть отправленна в лог. Также можно использовать `MPLog(msg)`, что будет эквивалентно `MPLog(notice, msg)`.
 
-==Yields==
-To use plainEngine yields, you should use function `MPYield()`.
+==Yield'ы==
+Чтобы использовать plainEngine yields, вызывайте функцию `MPYield()`.
 
-==Posting a message==
-To post a plainEngine notification, you should use function `MPPostMessage(name[, paramsTable])`. First argument is, well, message name. Second (optional) argument is lua table with message params.
+==Отправление сообщения==
+Чтобы отправить plainEngine-сообщение, следует использовать функцию `MPPostMessage(name[, paramsTable])`. Первый агрумент - это собственно, имя сообщения. Второй (опциональный) аргумент - это lua-таблица с параметрами сообщения.
 
-==Handling messages==
-To handle some message, you should declare function of a table _MPMessageHandlers_ - `MPMessageHandlers.<message_name>(args)`.
-First and only argument would be lua table with message params.	If you want to set any message handler, declare a function `MPHandlerOfAnyMessage(name, args)`. Therefore, first argument would be name of message you caught and second - table of params.
+==Обработка сообщения==
+Чтобы обработать какое-либо сообщение, следует объявить функцию - поле таблицы _MPMessageHandlers_ - `MPMessageHandlers.<имя_сообщения>(args)`.
+Первым и единственным аргументом передастся lua-таблица с параметрами сообщения. Если вы хотите установить обработчик любого сообщения, обьявите функцию `MPHandlerOfAnyMessage(name, args)`. Тогда первым аргументом передастся имя сообщения, и вторым - таблица параметров.
 
-==Working with objects==
-Firstly, the object is userinfo object with metatable, which responds to four events: `__index` (which connects method names to functions), `__newindex` (which provides simple interface to features), `__eq` and `__gc`.
+==Работа с объектами==
+Во-первых, обьект - это userinfo с метатаблицей, отвечающей на 4 события - `__index` (которое связывает имена методов с функциями), `__newindex` (который предоставляет простой интерфейс для признаков), `__eq` и `__gc`.
 
-While you can call to object in your script, it is retained.
+Пока вы можете обратиться к обьекту в вашем скрипте, он является "retained" (Термин Objective-C, означает, что не может быть уничтожен).
 
-To get _MPObject_, you should use either table `MPObjects` (name per object) or function `MPObjectByName(name)`. *nil* would be returned if not found.
+Чтобы получить _MPObject_, вам стоит либо использовать таблицу `MPObjects` (имя на обьект) или функцию `MPObjectByName(name)`. Если боьект не найден, вернётся *nil*.
 
-To create plainEngine object, you should use functions `MPNewObject(name)` and `MPCreateObject(name)`. The difference is that objects, created with `MPNewObject`, *must be* released manually with `object.release` and objects, created by `MPCreateObject` *must NOT be* released manually as they would be released automatically after stop.
+Чтобы создать обьект plainEngine, следует использовать функции `MPNewObject(name)` и `MPCreateObject(name)`. Разница заключается в том, чтоб обьекты, созданные с помощью `MPNewObject`, *должны быть* освобождены вручную с помощью `object.release`, а обьекты, созданные с помощью `MPCreateObject` *НЕ должны быть* уничтожены вручную, так как они будут освобождены автоматически после остановки.
 
-Also you may use functions `MPGetAllObjects()` (returns array with all objects) and `MPGetObjectsByFeature(featurename)` (returns array with all objects with given feature)
+Также можно использовать функции `MPGetAllObjects()` (возвращает массив всех обьектов) и `MPGetObjectsByFeature(featurename)` (возвращает массив всех обьектов с заданным признаком).
 
-To get object methods, you should use `object:methodname` (or `object["methodName"]` (object, ...) ). The result would be function, analogical to corresponding method. If methodName contains ':' symbols, you can't use object:methodName syntax, but you can use _MPMethodAliasTable_. It is global table, which maps method aliases to their real names. When method is called, it is firstly checked if there is alias for it. If there is, method mapped to this alias in MPMethodAliasTable is called. For example, you want expression `obj["setXYZ:::"](0, 0, 0)` to become less ugly.
-So, in 'start' you declare:
+Чтобы обращаться к методам обьекта, следует использовать `object:methodname` (или `object["methodName"]` (object, ...) ). Результатом будет функция, аналогичная соответвующему методу. Если имя метода содержит символы ':', вы не можете использовать форму object:methodName, но вы можете использовать _MPMethodAliasTable_. Это глобальная таблица, которая отображает псевдонимы методов на их реальные имена. При вызове метода, в первую очередь проверяется наличие псевдонима для него. Если таковой есть, вызывается метод, соответствующий своему псевдониму. Например, вы хотите сделать выражение`obj["setXYZ:::"](obj 0, 0, 0)` менее уродливым.
+Тогда, в 'start', вы обьявляете:
 {{{
 function start()
 	...
@@ -48,43 +48,44 @@ function start()
 	...
 end
 }}}
-And then you can call `obj.setXYZ(0, 0, 0)`.
+И затем, вы можете вызывать `obj.setXYZ(0, 0, 0)`.
 
-Some methods of MPObject are overloaded in lua MPObject, because they used types, not supported by Lua. They are:
+Некоторые методы MPObject переопределены в lua-обьекте, так как они использовали типы, не поддерживаемые lua. Это:
 		
-  # `object:getName()` - returns string with object name;
-  # `object:getHandle()` - returns object handle as number;
-  # `object:hasFeature(fname)` - returns boolean, which is true if objects has feature fname and false otherwise;
-  # `object:copy()` - returns copy of object;
-  # `object:copyWithName(copyname)` - returns copy of object with name _'copyname'_;
-  # `object:getAllFeatures()` - returns table with feature names as keys and their values as values;
-  # `object:getFeatureData(fname)` - returns string with value of feature _'fname'_;
-  # `object:setFeature(fname[, fvalue [,paramsTable]])`	- sets feature _'fname'_ to _'fvalue'_ (default value is empty string) with paramsTable as userInfo;
-  # `object:removeFeature(fname[, paramsTable])` - removes feature 'fname' from object, sending paramsTable as userInfo if there is such;
+  # `object:getName()` - возвращает строку с именем обьекта;
+  # `object:getHandle()` - возвращает handle обьекта как `number`;
+  # `object:hasFeature(fname)` - возвращает `true`, если обьект имеет признак fname и `false` в противном случае;
+  # `object:copy()` - возвращает копию обьекта;
+  # `object:copyWithName(copyname)` - возвращает копию обьекта с именем _'copyname'_;
+  # `object:getAllFeatures()` - возвращает таблицу с названиями признаков в качестве ключей и их значениями в качестве значений (таблицы);
+  # `object:getFeatureData(fname)` - возвращает строку со значением признака _'fname'_;
+  # `object:setFeature(fname[, fvalue [,paramsTable]])`	- меняет значение признака _'fname'_ на _'fvalue'_ (значение по умолчанию - пустая строка) и paramsTable как userInfo;
+  # `object:removeFeature(fname[, paramsTable])` - удаляет признак 'fname' у object, отправляя paramsTable как userInfo при наличии такового;
 
-If you want set object feature to some value without sending any params, you may write
+Если вы хотите сменить значение признака обьекта на некоторое значение без отправления каких-либо параметров, вы можете написать
 {{{ 
 object.featurename = featurevalue 
 }}}
-Instead of
-{{{ 
+вместо
+{{{
 object:setFeature(featurename, featurevalue); 
 }}}
-But reading features doesn't work in such way, because object.name returns method 'name'
 
-==Declaring delegate classes==
-In Lua, delegate class is a table, which contains a function 'delegateClassTable:newDelegateWithObject(object)' or 'delegateClassTable:new()'. If you want to register delegate class, use functions `MPRegisterDelegateClass(delegateClassTable)` or `MPRegisterDelegateClassForFeature(delegateClassTable, featureName)`.
+Но чтение признаков таким образом работать не будет, так как object.name означает метод 'name'.
 
-Delegates instanciate via delegate class functions (`newDelegateWithObject` or `new`). Each delegate must contain table 'signatures' which is array of method signatures (strings) of kind: `"<R> methodname:<t1> :<t2> :<t3>"`, where `<R>` is return type encoding, `t1` is first argument encoding etc. (e.g. "d getX" or "v setXYZ:d:d:d").
+==Обьявление классов делегатов==
+В Lua, класс делегата это таблица, содержащая функцию 'delegateClassTable:newDelegateWithObject(object)' или 'delegateClassTable:new()'. Если вы хотите зарегистрировать класс делегатат, используйте функцию `MPRegisterDelegateClass(delegateClassTable)` или `MPRegisterDelegateClassForFeature(delegateClassTable, featureName)`.
 
-Signatures may change freely during delegate lifetime. When the method is called, its selector is searched in signatures array and if found, appropriate function of delegate is called (as `delegate:function`). Special functions are `setFeature(name, value, userInfo)` and `removeFeature(name, userInfo)` which are called (if exist) on feature setting and removing. Also there is `dealloc()` function which is called on delegate remove.
+Делегаты инстанцируются через функции класса делегата (`newDelegateWithObject` или `new`). Каждый делегам должен содержать таблицу 'signatures', являющуюся массивом сигнатур метода (тип - `string`) вида: `"<R> methodname:<t1> :<t2> :<t3>"`, где `<R>` - это type encoding возвращаемого значения, `t1` - это type encoding первого аргумента и т.д. (например "d getX" или "v setXYZ:d:d:d").
 
-Example of delegate class:
+Сигнатуры могут свободно меняться на протяжении существования делегата. Когда метод вызывается, его селектор отыскивается в массиве сигнатур и, если найден, вызывается соответствующая функция (как `delegate:function`). Специальны функции - это `setFeature(name, value, userInfo)` и `removeFeature(name, userInfo)` которые вызываются во время изменения и удаления признака. Также может быть функция `dealloc()`, вызываемая во время удаления делегата.
+
+Пример класса делегата:
 {{{
 
 delegateClass =
 {
-	--generic to all instances
+	--общее для всех экземпляров
 	signatures =
 	{
 		"d getV";
@@ -94,7 +95,7 @@ delegateClass =
 function delegateClass:new()
 	return setmetatable(
 	{
-		--specific to all instances
+		--специфичное для каждого экземпляра
 		v=0
 	}, {__index = delegateClass} )
 end
