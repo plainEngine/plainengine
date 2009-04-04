@@ -1,5 +1,5 @@
 #labels Phase-Implementation,Featured
-#Lua API documentation for MPLuaSubject
+# Lua API documentation for MPLuaSubject
 
 =Lua bindings for plainEngine.=
 	==Provides full plainEngine api to lua.==
