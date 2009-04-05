@@ -1,0 +1,24 @@
+#summary Краткое описание type encodings и список скалярных типов, поддерживаемых plainEngine
+#labels Phase-Design,Phase-Implementation,Phase-Requirements,Featured
+
+= Введение =
+
+Когда вы хотите зарегистировать класс делегата, вам потребуется обьявить некоторые методы и добавить некоторую информацию о типе. В случае с субъектами на Objective-C, runtime обрабатывает это автоматически, но подобное невозможно на субъектах, написанных на других языках. Для этого plainEngine использует Objective-C type encodings. Type encoding - это c-строка, определённая для каждого скалярного типа.
+
+= Таблица encoding'ов =
+
+PlainEngine поддерживает вполне определённое количество скалярных типов. Ниже приведена таблица поддерживаемых типов и их encoding'ов:
+
+|| *Тип* || *Encoding* ||
+|| `double` || `"d"` ||
+|| `float` || `"f"` ||
+|| `long` || `"l"` ||
+|| `unsigned long` || `"L"` ||
+|| `long long` || `"q"` ||
+|| `unsigned long long` || `"Q"` ||
+|| `char` || `"c"` ||
+|| `unsigned char` || `"C"` ||
+|| `short` || `"s"` ||
+|| `unsigned short` || `"S"` ||
+|| `int` || `"i"` ||
+|| `unsigned int` || `"I"` ||

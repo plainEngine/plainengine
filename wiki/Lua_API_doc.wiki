@@ -37,7 +37,7 @@ Firstly, the object is userinfo object with metatable, which responds to four ev
 
 While you can call to object in your script, it is retained.
 
-To get _MPObject_, you should use either table `MPObjects` (name per object) or function `MPObjectByName(name)`. *nil* would be returned if not found.
+To get _MPObject_ by name, you should use either table `MPObjects` (name per object) or function `MPObjectByName(name)`. To get it by handle, use function `MPObjectByHandle(handle)`. *nil* would be returned if not found.
 
 To create plainEngine object, you should use functions `MPNewObject(name)` and `MPCreateObject(name)`. The difference is that objects, created with `MPNewObject`, *must be* released manually with `object.release` and objects, created by `MPCreateObject` *must NOT be* released manually as they would be released automatically after stop.
 
@@ -52,7 +52,7 @@ function start()
 	...
 end
 }}}
-And then you can call `obj.setXYZ(0, 0, 0)`.
+And then you can call `obj:setXYZ(0, 0, 0)`.
 
 Some methods of MPObject are overloaded in lua MPObject, because they used types, not supported by Lua. They are:
 		
@@ -65,6 +65,7 @@ Some methods of MPObject are overloaded in lua MPObject, because they used types
   # `object:getFeatureData(fname)` - returns string with value of feature _'fname'_;
   # `object:setFeature(fname[, fvalue [,paramsTable]])`	- sets feature _'fname'_ to _'fvalue'_ (default value is empty string) with paramsTable as userInfo;
   # `object:removeFeature(fname[, paramsTable])` - removes feature 'fname' from object, sending paramsTable as userInfo if there is such;
+  # `object:respondsTo(selName)` - returns true, if object responds to selector 'selName' and false otherwise;
 
 If you want set object feature to some value without sending any params, you may write
 {{{ 

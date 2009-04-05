@@ -1,4 +1,4 @@
-#summary документация по Lua API для MPLuaSubject#labels Phase-Implementation,Featured
+﻿#summary документация по Lua API для MPLuaSubject#labels Phase-Implementation,Featured
 
 =Привязки Lua к plainEngine= 
 _(Предоставляют полное API plainEngine для Lua)_
@@ -33,7 +33,7 @@ _(Предоставляют полное API plainEngine для Lua)_
 
 Пока вы можете обратиться к обьекту в вашем скрипте, он является "retained" (Термин Objective-C, означает, что не может быть уничтожен).
 
-Чтобы получить _MPObject_, вам стоит либо использовать таблицу `MPObjects` (имя на обьект) или функцию `MPObjectByName(name)`. Если боьект не найден, вернётся *nil*.
+Чтобы получить _MPObject_, зная его имя, вам стоит либо использовать таблицу `MPObjects` (имя на обьект) или функцию `MPObjectByName(name)`. Для получения обьекта по его handle, используйте `MPObjectByHandle(handle)`. Если обьект не найден, вернётся *nil*.
 
 Чтобы создать обьект plainEngine, следует использовать функции `MPNewObject(name)` и `MPCreateObject(name)`. Разница заключается в том, чтоб обьекты, созданные с помощью `MPNewObject`, *должны быть* освобождены вручную с помощью `object.release`, а обьекты, созданные с помощью `MPCreateObject` *НЕ должны быть* уничтожены вручную, так как они будут освобождены автоматически после остановки.
 
@@ -48,7 +48,7 @@ function start()
 	...
 end
 }}}
-И затем, вы можете вызывать `obj.setXYZ(0, 0, 0)`.
+И затем, вы можете вызывать `obj:setXYZ(0, 0, 0)`.
 
 Некоторые методы MPObject переопределены в lua-обьекте, так как они использовали типы, не поддерживаемые lua. Это:
 		
@@ -61,6 +61,7 @@ end
   # `object:getFeatureData(fname)` - возвращает строку со значением признака _'fname'_;
   # `object:setFeature(fname[, fvalue [,paramsTable]])`	- меняет значение признака _'fname'_ на _'fvalue'_ (значение по умолчанию - пустая строка) и paramsTable как userInfo;
   # `object:removeFeature(fname[, paramsTable])` - удаляет признак 'fname' у object, отправляя paramsTable как userInfo при наличии такового;
+  # `object:respondsTo(selName)` - возвращает `true`, если object отвечает на селектор метода _`selName`_ и `false` в противном случае.
 
 Если вы хотите сменить значение признака обьекта на некоторое значение без отправления каких-либо параметров, вы можете написать
 {{{ 
