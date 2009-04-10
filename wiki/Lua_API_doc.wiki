@@ -80,7 +80,24 @@ But reading features doesn't work in such way, because object.name returns metho
 ==Declaring delegate classes==
 In Lua, delegate class is a table, which contains a function 'delegateClassTable:newDelegateWithObject(object)' or 'delegateClassTable:new()'. If you want to register delegate class, use functions `MPRegisterDelegateClass(delegateClassTable)` or `MPRegisterDelegateClassForFeature(delegateClassTable, featureName)`.
 
-Delegates instanciate via delegate class functions (`newDelegateWithObject` or `new`). Each delegate must contain table 'signatures' which is array of method signatures (strings) of kind: `"<R> methodname:<t1> :<t2> :<t3>"`, where `<R>` is return type encoding, `t1` is first argument encoding etc. (e.g. "d getX" or "v setXYZ:d:d:d").
+Delegates instanciate via delegate class functions (`newDelegateWithObject` or `new`). Each delegate must contain table 'signatures' which is array of method signatures (strings) of kind: `"<R> methodname:<t1> :<t2> namedparam:<t3>"`, where `<R>` is return type, `t1` is first argument type etc. (e.g. "double getX" or "void setXYZ:double:double:double"). 
+
+Types, supported by Lua subject:
+
+|| *C Type* || *Lua type name* ||
+|| `double` || `double` ||
+|| `float` || `float` ||
+|| `long` || `long` ||
+|| `unsigned long` || `ulong` ||
+|| `long long` || `longlong` ||
+|| `unsigned long long` || `ulonglong` ||
+|| `char` || `char` ||
+|| `unsigned char` || `uchar` ||
+|| `short` || `short` ||
+|| `unsigned short` || `ushort` ||
+|| `int` || `int` ||
+|| `unsigned int` || `uint` ||
+|| `MPHandle` || `mphandle` ||
 
 Signatures may change freely during delegate lifetime. When the method is called, its selector is searched in signatures array and if found, appropriate function of delegate is called (as `delegate:function`). Special functions are `setFeature(name, value, userInfo)` and `removeFeature(name, userInfo)` which are called (if exist) on feature setting and removing. Also there is `dealloc()` function which is called on delegate remove.
 
@@ -92,8 +109,8 @@ delegateClass =
 	--generic to all instances
 	signatures =
 	{
-		"d getV";
-		"v setV:d";
+		"double getV";
+		"void setV:double";
 	}
 }
 function delegateClass:new()

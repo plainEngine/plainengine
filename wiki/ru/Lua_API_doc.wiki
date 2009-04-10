@@ -77,7 +77,24 @@ object:setFeature(featurename, featurevalue);
 ==Обьявление классов делегатов==
 В Lua, класс делегата это таблица, содержащая функцию 'delegateClassTable:newDelegateWithObject(object)' или 'delegateClassTable:new()'. Если вы хотите зарегистрировать класс делегатат, используйте функцию `MPRegisterDelegateClass(delegateClassTable)` или `MPRegisterDelegateClassForFeature(delegateClassTable, featureName)`.
 
-Делегаты инстанцируются через функции класса делегата (`newDelegateWithObject` или `new`). Каждый делегам должен содержать таблицу 'signatures', являющуюся массивом сигнатур метода (тип - `string`) вида: `"<R> methodname:<t1> :<t2> :<t3>"`, где `<R>` - это type encoding возвращаемого значения, `t1` - это type encoding первого аргумента и т.д. (например "d getX" или "v setXYZ:d:d:d").
+Делегаты инстанцируются через функции класса делегата (`newDelegateWithObject` или `new`). Каждый делегат должен содержать таблицу 'signatures', являющуюся массивом сигнатур метода (тип - `string`) вида: `"<R> methodname:<t1> :<t2> namedparam:<t3>"`, где `<R>` - это тип возвращаемого значения, `t1` - это тип первого аргумента и т.д. (например "double getX" или "void setXYZ:double:double:double"). 
+
+Типы, поддерживаемые субъектом Lua:
+
+|| *тип C* || *имя типа для Lua* ||
+|| `double` || `double` ||
+|| `float` || `float` ||
+|| `long` || `long` ||
+|| `unsigned long` || `ulong` ||
+|| `long long` || `longlong` ||
+|| `unsigned long long` || `ulonglong` ||
+|| `char` || `char` ||
+|| `unsigned char` || `uchar` ||
+|| `short` || `short` ||
+|| `unsigned short` || `ushort` ||
+|| `int` || `int` ||
+|| `unsigned int` || `uint` ||
+|| `MPHandle` || `mphandle` ||
 
 Сигнатуры могут свободно меняться на протяжении существования делегата. Когда метод вызывается, его селектор отыскивается в массиве сигнатур и, если найден, вызывается соответствующая функция (как `delegate:function`). Специальны функции - это `setFeature(name, value, userInfo)` и `removeFeature(name, userInfo)` которые вызываются во время изменения и удаления признака. Также может быть функция `dealloc()`, вызываемая во время удаления делегата.
 
@@ -89,8 +106,8 @@ delegateClass =
 	--общее для всех экземпляров
 	signatures =
 	{
-		"d getV";
-		"v setV:d";
+		"double getV";
+		"void setV:double";
 	}
 }
 function delegateClass:new()
