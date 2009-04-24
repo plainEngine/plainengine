@@ -28,8 +28,8 @@ To use plainEngine yields, you should use function `MPYield()`.
 ==Posting a message==
 To post a plainEngine notification, you should use function `MPPostMessage(name[, paramsTable])`. First argument is, well, message name. Second (optional) argument is lua table with message params.
 
-==Posting an request==
-To post a plainEngine notification, you should use function `MPPostRequest(name[, paramsTable])`. First argument is request name. Second (optional) argument is lua table with request params. Returns string with result (empty string if there is no one)
+==Posting a request==
+To post a plainEngine request, you should use function `MPPostRequest(name[, paramsTable])`. First argument is request name. Second (optional) argument is lua table with request params. Returns string with result (empty string if there is no one)
 
 ==Handling messages==
 To handle some message, you should declare function of a table _MPMessageHandlers_ - `MPMessageHandlers.<message_name>(args)`.
