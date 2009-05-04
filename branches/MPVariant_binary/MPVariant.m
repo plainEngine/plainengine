@@ -282,11 +282,8 @@
 	if (!binComputed)
 	{
 		NSString *strValue = [self stringValue];
-		/*
-		[theBinaryDataValue appendBytes: [strValue UTF8String]
-								 length: [strValue length]+sizeof(unichar)]; //theBinaryDataValue is empty before this line
-								 */
 		[theBinaryDataValue setData: [strValue dataUsingEncoding: NSUTF8StringEncoding]];
+		[theBinaryDataValue appendBytes: "\0" length: sizeof("")]; //terminator
 		binComputed = YES;
 	}
 
