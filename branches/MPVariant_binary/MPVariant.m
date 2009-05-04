@@ -203,8 +203,7 @@
 			break;
 		case type_binary:
 			convData = [NSMutableData dataWithData: theBinaryDataValue];
-			[convData appendBytes: "\0" length: 1]; //Now string is correct (null-terminated) in any way
-			//TODO: optimize later
+			[convData appendBytes: "\0" length: sizeof("\0")]; //Now string is correct (null-terminated) in any case
 			[theStringValue setString: [NSString stringWithUTF8String: [convData bytes]]];
 			break;
 		case type_string:
@@ -283,8 +282,11 @@
 	if (!binComputed)
 	{
 		NSString *strValue = [self stringValue];
+		/*
 		[theBinaryDataValue appendBytes: [strValue UTF8String]
-								 length: [strValue length]+1]; //theBinaryDataValue is empty before this line
+								 length: [strValue length]+sizeof(unichar)]; //theBinaryDataValue is empty before this line
+								 */
+		[theBinaryDataValue setData: [strValue dataUsingEncoding: NSUTF8StringEncoding]];
 		binComputed = YES;
 	}
 
