@@ -2,21 +2,21 @@
 #labels Phase-Implementation,Featured
 
 =Lua bindings for plainEngine= 
-_(Provides full plainEngine api to lua)_
+_Provides full plainEngine api to lua_
 
 <wiki:toc max_depth="3" />
 
 ==Basic==
 Script is searched for _'init', 'start', 'update'_ and _'stop'_ functions.
-		* `init` - function is called on Lua subject starting and should contain subject initialization code
+		* `init()` - function is called on Lua subject starting and should contain subject initialization code
 			(object creation, delegate registration, etc.) and should not contain any another-subject-dependant actions
 			(e.g. delegate calls) because necessary subjects might have been not initialized yet.
-		* `start`- function is called on Lua subject first update and should contain another-subject-dependant actions as this subjects
+		* `start()`- function is called on Lua subject first update and should contain another-subject-dependant actions as this subjects
 			had already been initiaized on 'init' time.
-		* `update` - function runs every update.
-		* `stop` - function is called on exit and should contain deinitialization code and should not contain any another-subject-dependant
+		* `update()` - function runs every update.
+		* `stop()` - function is called on exit and should contain deinitialization code and should not contain any another-subject-dependant
 			actions because this subjects might have been deinitialized already.
-This functions must not have any arguments.
+This functions should not return any value.
 
 ==Logging==
 To send message to log, you should use function `MPLog(level, msg)`
@@ -46,7 +46,7 @@ To create plainEngine object, you should use functions `MPNewObject(name)` and `
 
 Also you may use functions `MPGetAllObjects()` (returns array with all objects) and `MPGetObjectsByFeature(featurename)` (returns array with all objects with given feature)
 
-To get object methods, you should use `object:methodname` (or `object["methodName"]` (object, ...) ). The result would be function, analogical to corresponding method. If methodName contains ':' symbols, you can't use object:methodName syntax, but you can use _MPMethodAliasTable_. It is global table, which maps method aliases to their real names. When method is called, it is firstly checked if there is alias for it. If there is, method mapped to this alias in MPMethodAliasTable is called. For example, you want expression `obj["setXYZ:::"](obj, 0, 0, 0)` to become less ugly.
+To get object methods, you should use `object:methodname` (or `object["methodName"](object, ...)` ). The result would be function, analogical to corresponding method. If methodName contains ':' symbols, you can't use object:methodName syntax, but you can use _MPMethodAliasTable_. It is global table, which maps method aliases to their real names. When method is called, it is firstly checked if there is alias for it. If there is, method mapped to this alias in MPMethodAliasTable is called. For example, you want expression `obj["setXYZ:::"](obj, 0, 0, 0)` to become less ugly.
 So, in 'start' you declare:
 {{{
 function start()
