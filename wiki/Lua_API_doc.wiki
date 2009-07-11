@@ -104,6 +104,8 @@ Types, supported by Lua subject:
 
 Signatures may change freely during delegate lifetime. When the method is called, its selector is searched in signatures array and if found, appropriate function of delegate is called (as `delegate:function`). Special functions are `setFeature(name, value, userInfo)` and `removeFeature(name, userInfo)` which are called (if exist) on feature setting and removing. Also there is `dealloc()` function which is called on delegate remove.
 
+Method must be implemented by function with name, equal to method name, including named params (e.g., method "someMethod:d foo:d:d" must be implemented by function "someMethodfoo").
+
 Example of delegate class:
 {{{
 
